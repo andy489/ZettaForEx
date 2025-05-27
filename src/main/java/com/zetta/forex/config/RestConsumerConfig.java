@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
-public class WebClientConfig {
+public class RestConsumerConfig {
 
     @Value("${api_layer.url}")
     private String apiUrl;
