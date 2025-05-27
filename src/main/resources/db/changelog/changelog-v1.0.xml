@@ -30,5 +30,23 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+        <createTable tableName="conversions">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="amount" type="DECIMAL(38, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="result" type="DECIMAL(38, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="source" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="target" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="timestamp" type="datetime"/>
+        </createTable>
     </changeSet>
 </databaseChangeLog>

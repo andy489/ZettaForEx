@@ -18,5 +18,5 @@ public class ZettaConversionResponseDto {
 
     private String to;
 
-    private Double amount;
+    private Double result;
 }

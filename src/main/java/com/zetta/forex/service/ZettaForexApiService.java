@@ -1,5 +1,6 @@
 package com.zetta.forex.service;
 
+import com.zetta.forex.aop.ConversionHistoryMarker;
 import com.zetta.forex.config.LocalDateTimeProvider;
 import com.zetta.forex.config.MapStructMapper;
 import com.zetta.forex.model.dto.ExchangeRateResponseDto;
@@ -9,6 +10,7 @@ import com.zetta.forex.model.entity.ExchangeRatesEntity;
 import com.zetta.forex.repo.ExchangeRateRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,7 +24,8 @@ import java.util.Map;
 import static com.zetta.forex.util.Util.roundToNDecimals;
 
 @Service
-@Transactional
+//@Transactional
+@RequiredArgsConstructor
 public class ZettaForexApiService {
 
     private static final int INVALID_CURRENCY_CODE = 1001;
@@ -30,9 +33,9 @@ public class ZettaForexApiService {
 
     private static final int CURRENCY_LENGTH = 3;
 
-    private static final boolean debug = true;
+    private static final boolean debug = false;
 
-    private static final Logger logger = LoggerFactory.getLogger(ZettaForexApiService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ZettaForexApiService.class);
 
     @Value("${api_layer.api_key}")
     private String apiKey;
@@ -50,14 +53,6 @@ public class ZettaForexApiService {
     private final ExchangeRateRepository exchangeRateRepository;
 
     private final LocalDateTimeProvider localDateTimeProvider;
-
-    public ZettaForexApiService(WebClient webClient, MapStructMapper mapper, ExchangeRateRepository exchangeRateRepository,
-                                LocalDateTimeProvider localDateTimeProvider) {
-        this.webClient = webClient;
-        this.mapper = mapper;
-        this.exchangeRateRepository = exchangeRateRepository;
-        this.localDateTimeProvider = localDateTimeProvider;
-    }
 
     public ExchangeRateResponseDto getRates() {
         if (debug) {
@@ -101,7 +96,7 @@ public class ZettaForexApiService {
         return mapper.toDto(exchangeRatesEntity);
     }
 
-    public ResponseEntity<Object> calcRate(String from, String to) {
+    public ResponseEntity<ZettaExchangeRateResponseDto> calcRate(String from, String to) {
         ExchangeRateResponseDto rates = this.getRates();
 
         Map<String, Double> quotes = rates.getQuotes();
@@ -141,7 +136,7 @@ public class ZettaForexApiService {
                 .setRate(currRate));
     }
 
-    public ResponseEntity<Object> calcAmount(Double amount, String from, String to) {
+    public ResponseEntity<ZettaConversionResponseDto> calcAmount(Double amount, String from, String to) {
         ExchangeRateResponseDto rates = this.getRates();
 
         Map<String, Double> quotes = rates.getQuotes();
@@ -150,7 +145,7 @@ public class ZettaForexApiService {
                 .setTimestamp(localDateTimeProvider.getTime())
                 .setFrom(from)
                 .setTo(to)
-                .setAmount(amount);
+                .setResult(amount);
 
         if (from.equals(baseCurrency)) {
             if (to.equals(baseCurrency)) {
@@ -159,14 +154,14 @@ public class ZettaForexApiService {
 
             double currRate = roundToNDecimals(quotes.get(baseCurrency + to), 6);
             return ResponseEntity.ok(zettaConversionResponseDto
-                    .setAmount(roundToNDecimals(amount * currRate, 2)));
+                    .setResult(roundToNDecimals(amount * currRate, 2)));
         }
 
         if (to.equals(baseCurrency)) {
 
             double currRate = roundToNDecimals(1.0 / quotes.get(baseCurrency + from), 6);
             return ResponseEntity.ok(zettaConversionResponseDto
-                    .setAmount(roundToNDecimals(amount * currRate, 2)));
+                    .setResult(roundToNDecimals(amount * currRate, 2)));
 
         }
 
@@ -176,6 +171,6 @@ public class ZettaForexApiService {
         double currRate = toBaseRate / fromBaseRate;
 
         return ResponseEntity.ok(zettaConversionResponseDto
-                .setAmount(roundToNDecimals(amount * currRate, 2)));
+                .setResult(roundToNDecimals(amount * currRate, 2)));
     }
 }

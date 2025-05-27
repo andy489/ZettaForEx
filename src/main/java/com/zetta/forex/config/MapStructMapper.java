@@ -4,11 +4,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zetta.forex.model.dto.ExchangeRateResponseDto;
+import com.zetta.forex.model.dto.ZettaConversionResponseDto;
+import com.zetta.forex.model.entity.ConversionHistoryEntity;
 import com.zetta.forex.model.entity.ExchangeRatesEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Map;
 
 @Mapper(componentModel = "spring")
@@ -22,6 +27,11 @@ public interface MapStructMapper {
     @Mapping(target = "quotes", source = "quotes", qualifiedByName = "stringToMap")
     ExchangeRateResponseDto toDto(ExchangeRatesEntity entity);
 
+    @Mapping(target = "timestamp", source = "timestamp", qualifiedByName = "epochTimeToLocalDateTime")
+    @Mapping(target = "source", source = "from")
+    @Mapping(target = "target", source = "to")
+    ConversionHistoryEntity toEntity(ZettaConversionResponseDto zettaConversionResponseDto);
+
     @Named("mapToString")
     static String mapToString(Map<String, Double> map) {
         try {
@@ -33,12 +43,30 @@ public interface MapStructMapper {
 
     @Named("stringToMap")
     static Map<String, Double> stringToMap(String json) {
-        json = json;
         try {
-            return objectMapper.readValue(json, new TypeReference<Map<String, Double>>() {
+            return objectMapper.readValue(json, new TypeReference<>() {
             });
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Error converting JSON string to map", e);
+        }
+    }
+
+    @Named("epochTimeToLocalDateTime")
+    public static LocalDateTime epochToLocalDateTime(long epochTime) {
+        // Determine if the time is in seconds or milliseconds
+        // Typically, if the number is very large (> 1e12), it's in milliseconds
+        if (String.valueOf(epochTime).length() > 10) {
+            // Milliseconds to LocalDateTime
+            return LocalDateTime.ofInstant(
+                    Instant.ofEpochMilli(epochTime),
+                    ZoneId.systemDefault()
+            );
+        } else {
+            // Seconds to LocalDateTime
+            return LocalDateTime.ofInstant(
+                    Instant.ofEpochSecond(epochTime),
+                    ZoneId.systemDefault()
+            );
         }
     }
 }

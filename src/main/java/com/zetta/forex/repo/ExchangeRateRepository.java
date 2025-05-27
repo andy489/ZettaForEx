@@ -11,8 +11,8 @@ public interface ExchangeRateRepository extends JpaRepository<ExchangeRatesEntit
         return findById(1L);
     }
 
-    default ExchangeRatesEntity saveSingleton(ExchangeRatesEntity exchangeRatesEntity) {
+    default void saveSingleton(ExchangeRatesEntity exchangeRatesEntity) {
         exchangeRatesEntity.setId(1L);
-        return save(exchangeRatesEntity);
+        save(exchangeRatesEntity);
     }
 }
