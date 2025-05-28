@@ -46,7 +46,7 @@
             <column name="target" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="timestamp" type="datetime"/>
+            <column name="timestamp" type="TIMESTAMP" remarks="Stored in UTC"/>
         </createTable>
     </changeSet>
 </databaseChangeLog>

@@ -29,7 +29,7 @@ public class ExchangeRatesEntity implements Serializable {
     @Column(nullable = false)
     private String timestamp;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 3)
     private String source;
 
     @Column(nullable = false, length = 4000)

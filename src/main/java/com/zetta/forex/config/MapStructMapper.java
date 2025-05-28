@@ -13,8 +13,10 @@ import org.mapstruct.Named;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.Map;
+
+import java.time.ZoneId;
 
 @Mapper(componentModel = "spring")
 public interface MapStructMapper {
@@ -27,7 +29,7 @@ public interface MapStructMapper {
     @Mapping(target = "quotes", source = "quotes", qualifiedByName = "stringToMap")
     ExchangeRateResponseDto toDto(ExchangeRatesEntity entity);
 
-    @Mapping(target = "timestamp", source = "timestamp", qualifiedByName = "epochTimeToLocalDateTime")
+    @Mapping(target = "timestamp", source = "timestamp", qualifiedByName = "epochTimeToInstant")
     @Mapping(target = "source", source = "from")
     @Mapping(target = "target", source = "to")
     ConversionHistoryEntity toEntity(ZettaConversionResponseDto zettaConversionResponseDto);
@@ -51,22 +53,16 @@ public interface MapStructMapper {
         }
     }
 
-    @Named("epochTimeToLocalDateTime")
-    public static LocalDateTime epochToLocalDateTime(long epochTime) {
+    @Named("epochTimeToInstant")
+    public static Instant epochToInstant(long epochTime) {
         // Determine if the time is in seconds or milliseconds
         // Typically, if the number is very large (> 1e12), it's in milliseconds
         if (String.valueOf(epochTime).length() > 10) {
             // Milliseconds to LocalDateTime
-            return LocalDateTime.ofInstant(
-                    Instant.ofEpochMilli(epochTime),
-                    ZoneId.systemDefault()
-            );
+            return Instant.ofEpochMilli(epochTime);
         } else {
             // Seconds to LocalDateTime
-            return LocalDateTime.ofInstant(
-                    Instant.ofEpochSecond(epochTime),
-                    ZoneId.systemDefault()
-            );
+            return Instant.ofEpochSecond(epochTime);
         }
     }
 }

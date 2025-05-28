@@ -9,3 +9,7 @@ services:
       - '3306:3306'
     expose:
       - '3306'
+
+# open -a docker
+# docker compose up -d
+# docker container rm -f $(docker container ls -aq)

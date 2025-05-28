@@ -1,6 +1,5 @@
 package com.zetta.forex.service;
 
-import com.zetta.forex.aop.ConversionHistoryMarker;
 import com.zetta.forex.config.LocalDateTimeProvider;
 import com.zetta.forex.config.MapStructMapper;
 import com.zetta.forex.model.dto.ExchangeRateResponseDto;
@@ -24,11 +23,12 @@ import java.util.Map;
 import static com.zetta.forex.util.Util.roundToNDecimals;
 
 @Service
-//@Transactional
+@Transactional
 @RequiredArgsConstructor
 public class ZettaForexApiService {
 
     private static final int INVALID_CURRENCY_CODE = 1001;
+
     private static final int NO_SUCH_CURRENCY_CODE = 1002;
 
     private static final int CURRENCY_LENGTH = 3;

@@ -1,0 +1,21 @@
+<?xml version="1.1" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <changeSet id="load-conversions-data" author="your-name">
+        <loadData
+                tableName="conversions"
+                file="db/changelog/data/conversions_data.csv"
+                separator=","
+                usePreparedStatements="true">
+            <column name="amount" type="NUMERIC(19,2)"/>
+            <column name="result" type="NUMERIC(19,2)"/>
+            <column name="source" type="VARCHAR(3)"/>
+            <column name="target" type="VARCHAR(3)"/>
+            <column name="timestamp" type="TIMESTAMP"/>
+        </loadData>
+    </changeSet>
+</databaseChangeLog>

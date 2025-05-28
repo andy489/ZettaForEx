@@ -5,6 +5,10 @@ logging:
       aop: DEBUG
     com.zaxxer.hikari: DEBUG
 spring:
+  jackson:
+    time-zone: UTC
+    serialization:
+      write-dates-as-timestamps: false
   application:
     name: ZettaForEx
   datasource:
@@ -33,11 +37,17 @@ spring:
           shared-cache:
             mode: UNSPECIFIED
       hibernate:
+        connection:
+          time_zone: UTC
         format_sql: true
+        jdbc:
+          time_zone: UTC
     open-in-view: false
   liquibase:
     enabled: true
     change-log: classpath:db/changelog/db.changelog-master.xml
+    parameters:
+      serverTimezone: UTC
 api_layer:
   url: http://apilayer.net/api/live
   api_key: ${API_KEY:ceb6fe6e6124f728e0490ea83f9fbce8}
