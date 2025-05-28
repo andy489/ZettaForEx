@@ -1,35 +1,18 @@
 package com.zetta.forex.util;
 
+import com.zetta.forex.model.dto.AllRatesResponseDto;
 import com.zetta.forex.model.entity.ExchangeRatesEntity;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-
-public class Util {
-
-    public static double roundToNDecimals(double value, int n) {
-        return BigDecimal.valueOf(value)
-                .setScale(n, RoundingMode.HALF_UP)
-                .doubleValue();
-    }
-
-    public static long cutToNDigits(long number, int n) {
-        String numStr = Long.toString(number);
-
-        if (numStr.length() <= n) {
-            return number;
-        }
-
-        // Handle negative numbers (the '-' counts as a character)
-        boolean isNegative = numStr.charAt(0) == '-';
-        int endIndex = isNegative ? n + 1 : n; // Keep '-' plus 9 digits or 10 digits
-
-        String truncatedStr = numStr.substring(0, endIndex);
-        return Long.parseLong(truncatedStr);
-    }
+public class TestConstants {
 
     public static final String BASE_CURR_CODE = "EUR";
     public static final String CURR_EPOCH_TIME = "1748433361";
+
+    public static final AllRatesResponseDto ALL_RATES_RESPONSE_DTO = new AllRatesResponseDto()
+            .setSuccess(true)
+            .setTimestamp(CURR_EPOCH_TIME)
+            .setSource(BASE_CURR_CODE)
+            .setQuotes(CurrencyMapCreator.createCurrencyMap());
 
     public static final String currencyJson = "{\"EURAED\":4.159407,\"EURAFN\":79.268412,\"EURALL\":97.982377," +
             "\"EURAMD\":435.710355,\"EURANG\":2.02669,\"EURAOA\":1038.998421,\"EURARS\":1309.652174," +
@@ -77,4 +60,6 @@ public class Util {
             .setTimestamp(CURR_EPOCH_TIME)
             .setSource(BASE_CURR_CODE)
             .setQuotes(currencyJson);
+
+    public static final double DELTA = 0.1E-10;
 }

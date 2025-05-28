@@ -1,8 +1,9 @@
 package com.zetta.forex.config;
 
-import com.zetta.forex.model.dto.ExchangeRateResponseDto;
-import com.zetta.forex.service.ZettaForexApiService;
+import com.zetta.forex.service.ForexApiService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,13 +11,14 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 public class DataBaseInitializer implements CommandLineRunner {
 
-    private final ZettaForexApiService zettaForexApiService;
+    private static final Logger LOGGER = LoggerFactory.getLogger(DataBaseInitializer.class);
+
+
+    private final ForexApiService forexApiService;
 
     @Override
     public void run(String... args) throws Exception {
-        ExchangeRateResponseDto rates = zettaForexApiService.getRates();
 
-        System.out.println(rates);
-
+        LOGGER.info("Initializing DB: {}", forexApiService.getRates());
     }
 }

@@ -3,8 +3,8 @@ package com.zetta.forex.config;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zetta.forex.model.dto.ExchangeRateResponseDto;
-import com.zetta.forex.model.dto.ZettaConversionResponseDto;
+import com.zetta.forex.model.dto.AllRatesResponseDto;
+import com.zetta.forex.model.dto.ConversionResponseDto;
 import com.zetta.forex.model.entity.ConversionHistoryEntity;
 import com.zetta.forex.model.entity.ExchangeRatesEntity;
 import org.mapstruct.Mapper;
@@ -12,11 +12,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.Map;
-
-import java.time.ZoneId;
 
 @Mapper(componentModel = "spring")
 public interface MapStructMapper {
@@ -24,15 +20,19 @@ public interface MapStructMapper {
     ObjectMapper objectMapper = new ObjectMapper();
 
     @Mapping(target = "quotes", source = "quotes", qualifiedByName = "mapToString")
-    ExchangeRatesEntity toEntity(ExchangeRateResponseDto dto);
+    @Mapping(target = "id", ignore = true)
+    ExchangeRatesEntity toEntity(AllRatesResponseDto dto);
 
     @Mapping(target = "quotes", source = "quotes", qualifiedByName = "stringToMap")
-    ExchangeRateResponseDto toDto(ExchangeRatesEntity entity);
+    @Mapping(target = "success", ignore = true)
+    AllRatesResponseDto toDto(ExchangeRatesEntity entity);
 
     @Mapping(target = "timestamp", source = "timestamp", qualifiedByName = "epochTimeToInstant")
     @Mapping(target = "source", source = "from")
     @Mapping(target = "target", source = "to")
-    ConversionHistoryEntity toEntity(ZettaConversionResponseDto zettaConversionResponseDto);
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "amount", ignore = true)
+    ConversionHistoryEntity toEntity(ConversionResponseDto conversionResponseDto);
 
     @Named("mapToString")
     static String mapToString(Map<String, Double> map) {

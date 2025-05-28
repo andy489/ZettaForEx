@@ -1,27 +1,22 @@
 package com.zetta.forex.model.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-import java.util.Map;
-
 @Getter
 @Setter
 @Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
 @ToString
 public class ExchangeRateResponseDto {
-
     private Boolean success;
 
-    private String source;
+    private Long timestamp;
 
-    private String timestamp;
+    private String from;
 
-    private Map<String, Double> quotes;
+    private String to;
+
+    private Double rate;
 }

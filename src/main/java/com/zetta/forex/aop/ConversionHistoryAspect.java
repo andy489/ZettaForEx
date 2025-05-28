@@ -1,7 +1,7 @@
 package com.zetta.forex.aop;
 
 import com.zetta.forex.config.MapStructMapper;
-import com.zetta.forex.model.dto.ZettaConversionResponseDto;
+import com.zetta.forex.model.dto.ConversionResponseDto;
 import com.zetta.forex.model.entity.ConversionHistoryEntity;
 import com.zetta.forex.repo.ConversionHistoryRepository;
 import org.aspectj.lang.JoinPoint;
@@ -28,18 +28,18 @@ public class ConversionHistoryAspect {
         this.conversionHistoryRepository = conversionHistoryRepository;
     }
 
-    @Pointcut("execution(* com.zetta.forex.service.ZettaForexApiService.calcAmount(..))")
+    @Pointcut("execution(* com.zetta.forex.service.ForexApiService.calcAmount(..))")
     public void onAllSampleComponentMethods() {
     }
 
     @AfterReturning(pointcut = "onAllSampleComponentMethods()", returning = "result")
-    public void beforeEachMethod(JoinPoint joinPoint, ResponseEntity<ZettaConversionResponseDto> result) {
+    public void beforeEachMethod(JoinPoint joinPoint, ResponseEntity<ConversionResponseDto> result) {
 
         Object[] args = joinPoint.getArgs();
 
-        ZettaConversionResponseDto zettaConversionResponseDto = result.getBody();
+        ConversionResponseDto conversionResponseDto = result.getBody();
 
-        ConversionHistoryEntity conversionHistoryEntity = mapper.toEntity(zettaConversionResponseDto);
+        ConversionHistoryEntity conversionHistoryEntity = mapper.toEntity(conversionResponseDto);
         conversionHistoryEntity.setAmount(new BigDecimal(args[0].toString()));
 
         conversionHistoryRepository.save(conversionHistoryEntity);

@@ -9,7 +9,7 @@ import lombok.experimental.Accessors;
 @Setter
 @Accessors(chain = true)
 @ToString
-public class ZettaExchangeRateResponseDto {
+public class ConversionResponseDto {
     private Boolean success;
 
     private Long timestamp;
@@ -18,5 +18,5 @@ public class ZettaExchangeRateResponseDto {
 
     private String to;
 
-    private Double rate;
+    private Double result;
 }
