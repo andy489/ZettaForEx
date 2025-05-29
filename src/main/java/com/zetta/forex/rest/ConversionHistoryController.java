@@ -125,8 +125,8 @@ public class ConversionHistoryController {
     public ResponseEntity<?> getConversionHistory(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fromDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime toDate,
-            @RequestParam(required = false) String sourceCurrency,
-            @RequestParam(required = false) String targetCurrency,
+            @RequestParam(required = false, name = "source") String sourceCurrency,
+            @RequestParam(required = false, name = "target") String targetCurrency,
             @RequestParam(required = false) BigDecimal minAmount,
             @RequestParam(required = false) BigDecimal maxAmount,
             @RequestParam(defaultValue = "0") int page,

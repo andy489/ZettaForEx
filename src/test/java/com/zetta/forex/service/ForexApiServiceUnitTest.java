@@ -11,8 +11,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.reactive.function.client.WebClient;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import static com.zetta.forex.util.TestConstants.ALL_RATES_RESPONSE_DTO;
@@ -26,9 +26,6 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class ForexApiServiceUnitTest {
-
-    @Mock
-    private WebClient webClient;
 
     @Mock
     private MapStructMapper mapper;
@@ -161,7 +158,7 @@ public class ForexApiServiceUnitTest {
         ExchangeRateResponseDto exchangeRateResponseDto = forexApiService.calcRate( "GBP", "BGN");
 
         // Assert
-        assertEquals(2.333996, exchangeRateResponseDto.getRate(), DELTA,
+        assertEquals(2.333996, exchangeRateResponseDto.getRate(),
                 "Expected 2.333996 \"GBPBGN\" rate");
 
         assertEquals("GBP", exchangeRateResponseDto.getFrom(),
@@ -217,7 +214,7 @@ public class ForexApiServiceUnitTest {
                 forexApiService.calcAmount(220.50, "GBP", "BGN");
 
         // Assert
-        assertEquals(514.65, conversionResponseDto.getResult(), DELTA,
+        assertEquals(0, BigDecimal.valueOf(514.65).compareTo(conversionResponseDto.getResult()),
                 "Expected 514.65 \"GBPBGN\" as amount");
 
         assertEquals("GBP", conversionResponseDto.getFrom(),
@@ -252,7 +249,7 @@ public class ForexApiServiceUnitTest {
                 forexApiService.calcAmount(1200.5, "USD", "USD");
 
         // Assert
-        assertEquals(1200.5, conversionResponseDto.getResult(), DELTA,
+        assertEquals(0, BigDecimal.valueOf(1200.5).compareTo(conversionResponseDto.getResult()),
                 "Expected 1200.5 \"USDUSD\" as amount");
 
         assertEquals("USD", conversionResponseDto.getFrom(),
@@ -287,7 +284,7 @@ public class ForexApiServiceUnitTest {
                 forexApiService.calcAmount(333.0, "EUR", "EUR");
 
         // Assert
-        assertEquals(333.0, conversionResponseDto.getResult(), DELTA,
+        assertEquals(0, BigDecimal.valueOf(333.0).compareTo(conversionResponseDto.getResult()),
                 "Expected 333.0 \"EUREUR\" as amount");
 
         assertEquals("EUR", conversionResponseDto.getFrom(),

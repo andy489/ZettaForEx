@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Optional;
 
@@ -149,7 +150,8 @@ public class ForexApiService {
                 .setTimestamp(localDateTimeProvider.getTimeEpoch())
                 .setFrom(from)
                 .setTo(to)
-                .setResult(amount);
+                .setAmount(BigDecimal.valueOf(roundToNDecimals(amount, 2)))
+                .setResult(BigDecimal.valueOf(amount));
 
         if (from.equals(BASE_CURRENCY)) {
             if (to.equals(BASE_CURRENCY)) {
@@ -157,13 +159,13 @@ public class ForexApiService {
             }
 
             double currRate = roundToNDecimals(quotes.get(BASE_CURRENCY + to), 6);
-            return conversionResponseDto.setResult(roundToNDecimals(amount * currRate, 2));
+            return conversionResponseDto.setResult(BigDecimal.valueOf(roundToNDecimals(amount * currRate, 2)));
         }
 
         if (to.equals(BASE_CURRENCY)) {
 
             double currRate = roundToNDecimals(1.0 / quotes.get(BASE_CURRENCY + from), 6);
-            return conversionResponseDto.setResult(roundToNDecimals(amount * currRate, 2));
+            return conversionResponseDto.setResult(BigDecimal.valueOf(roundToNDecimals(amount * currRate, 2)));
         }
 
         Double fromBaseRate = quotes.get(BASE_CURRENCY + from);
@@ -171,6 +173,6 @@ public class ForexApiService {
 
         double currRate = toBaseRate / fromBaseRate;
 
-        return conversionResponseDto.setResult(roundToNDecimals(amount * currRate, 2));
+        return conversionResponseDto.setResult(BigDecimal.valueOf(roundToNDecimals(amount * currRate, 2)));
     }
 }

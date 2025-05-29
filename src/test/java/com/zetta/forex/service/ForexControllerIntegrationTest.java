@@ -1,10 +1,8 @@
 package com.zetta.forex.service;
 
-import com.zetta.forex.model.entity.ExchangeRatesEntity;
 import com.zetta.forex.repo.ExchangeRateRepository;
 import com.zetta.forex.util.TestConstants;
 import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -38,10 +36,10 @@ public class ForexControllerIntegrationTest {
     }
 
     @Test
-    @DisplayName("GET /api/exchange?from=BGN&to=EUR - Success")
+    @DisplayName("GET /api/rate?from=BGN&to=EUR - Success")
     void getExchangeRate_BGNEUR_returnsRate() throws Exception {
 
-        mockMvc.perform(get("/api/exchange")
+        mockMvc.perform(get("/api/rate")
                         .param("from", "BGN")
                         .param("to", "EUR"))
                 .andExpect(status().isOk())
@@ -51,10 +49,10 @@ public class ForexControllerIntegrationTest {
     }
 
     @Test
-    @DisplayName("GET /api/exchange?from=EUR&to=BGN - Success")
+    @DisplayName("GET /api/rate?from=EUR&to=BGN - Success")
     void getExchangeRate_EURBGN_returnsRate() throws Exception {
 
-        mockMvc.perform(get("/api/exchange")
+        mockMvc.perform(get("/api/rate")
                         .param("from", "EUR")
                         .param("to", "BGN"))
                 .andExpect(status().isOk())
@@ -64,10 +62,10 @@ public class ForexControllerIntegrationTest {
     }
 
     @Test
-    @DisplayName("GET /api/exchange?from=EUR&to=EUR - Success")
+    @DisplayName("GET /api/rate?from=EUR&to=EUR - Success")
     void getExchangeRate_EUREUR_returnsRate() throws Exception {
 
-        mockMvc.perform(get("/api/exchange")
+        mockMvc.perform(get("/api/rate")
                         .param("from", "EUR")
                         .param("to", "EUR"))
                 .andExpect(status().isOk())
@@ -77,10 +75,10 @@ public class ForexControllerIntegrationTest {
     }
 
     @Test
-    @DisplayName("GET /api/exchange?from=BGN&to=BGN - Success")
+    @DisplayName("GET /api/rate?from=BGN&to=BGN - Success")
     void getExchangeRate_BGNBGN_returnsRate() throws Exception {
 
-        mockMvc.perform(get("/api/exchange")
+        mockMvc.perform(get("/api/rate")
                         .param("from", "BGN")
                         .param("to", "BGN"))
                 .andExpect(status().isOk())
@@ -90,13 +88,13 @@ public class ForexControllerIntegrationTest {
     }
 
     @Test
-    @DisplayName("GET /api/exchange?from=BGN&to=AAA - Fails")
+    @DisplayName("GET /api/rate?from=BGN&to=AAA - Fails")
     void getExchangeRate_BGNAAA_invalidTargetCurrencyCode() throws Exception {
 
-        mockMvc.perform(get("/api/exchange")
+        mockMvc.perform(get("/api/rate")
                         .param("from", "BGN")
                         .param("to", "AAA"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Validation failed"));
+                .andExpect(jsonPath("$.error").value("Validation failed"));
     }
 }
