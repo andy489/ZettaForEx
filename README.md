@@ -26,8 +26,8 @@ docker compose up -d
 
 # Database
 - For testing purposes u can use SequelAce app for connecting with the database (or other)
-<div style="text-align:center">
-    <img src="sequel_ace.png" alt="Centered image" width="420">
+<div align="center">
+    <img src="sequel_ace.png" alt="Centered image" width="640">
 </div>
 
 # Request Examples
