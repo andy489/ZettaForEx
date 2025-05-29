@@ -1,7 +1,7 @@
 # Prerequisites
 - Java JDK 17 or later
 - Gradle 8.x or later
-- Spring Boot 3.5.0 or latest stable
+- Spring Boot 3.2.0 or latest stable
 - Docker 27.x or later
 - Liquibase 4.20.0 or later
 
