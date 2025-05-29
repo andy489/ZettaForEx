@@ -3,6 +3,7 @@
 - Gradle 8.x or later
 - Spring Boot 3.5.0 or latest stable
 - Docker 27.x or later
+- Liquibase 4.20.0 or later
 
 # Setting Up a Database with Docker
 ```bash

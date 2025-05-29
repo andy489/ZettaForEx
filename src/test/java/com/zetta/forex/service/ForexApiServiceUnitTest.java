@@ -52,7 +52,7 @@ public class ForexApiServiceUnitTest {
         when(mapper.toDto(EXCHANGE_RATES_ENTITY))
                 .thenReturn(ALL_RATES_RESPONSE_DTO);
 
-        when(localDateTimeProvider.getTime())
+        when(localDateTimeProvider.getTimeEpoch())
                 .thenReturn(Long.valueOf(CURR_EPOCH_TIME));
 
         // Act
@@ -86,7 +86,7 @@ public class ForexApiServiceUnitTest {
         when(mapper.toDto(EXCHANGE_RATES_ENTITY))
                 .thenReturn(ALL_RATES_RESPONSE_DTO);
 
-        when(localDateTimeProvider.getTime())
+        when(localDateTimeProvider.getTimeEpoch())
                 .thenReturn(Long.valueOf(CURR_EPOCH_TIME));
 
         // Act
@@ -120,7 +120,7 @@ public class ForexApiServiceUnitTest {
         when(mapper.toDto(EXCHANGE_RATES_ENTITY))
                 .thenReturn(ALL_RATES_RESPONSE_DTO);
 
-        when(localDateTimeProvider.getTime())
+        when(localDateTimeProvider.getTimeEpoch())
                 .thenReturn(Long.valueOf(CURR_EPOCH_TIME));
 
         // Act
@@ -154,7 +154,7 @@ public class ForexApiServiceUnitTest {
         when(mapper.toDto(EXCHANGE_RATES_ENTITY))
                 .thenReturn(ALL_RATES_RESPONSE_DTO);
 
-        when(localDateTimeProvider.getTime())
+        when(localDateTimeProvider.getTimeEpoch())
                 .thenReturn(Long.valueOf(CURR_EPOCH_TIME));
 
         // Act
@@ -189,7 +189,7 @@ public class ForexApiServiceUnitTest {
         when(mapper.toDto(EXCHANGE_RATES_ENTITY))
                 .thenReturn(ALL_RATES_RESPONSE_DTO);
 
-        when(localDateTimeProvider.getTime())
+        when(localDateTimeProvider.getTimeEpoch())
                 .thenReturn(Long.valueOf(CURR_EPOCH_TIME));
 
         // Act & Assert
@@ -209,7 +209,7 @@ public class ForexApiServiceUnitTest {
         when(mapper.toDto(EXCHANGE_RATES_ENTITY))
                 .thenReturn(ALL_RATES_RESPONSE_DTO);
 
-        when(localDateTimeProvider.getTime())
+        when(localDateTimeProvider.getTimeEpoch())
                 .thenReturn(Long.valueOf(CURR_EPOCH_TIME));
 
         // Act
@@ -244,7 +244,7 @@ public class ForexApiServiceUnitTest {
         when(mapper.toDto(EXCHANGE_RATES_ENTITY))
                 .thenReturn(ALL_RATES_RESPONSE_DTO);
 
-        when(localDateTimeProvider.getTime())
+        when(localDateTimeProvider.getTimeEpoch())
                 .thenReturn(Long.valueOf(CURR_EPOCH_TIME));
 
         // Act
@@ -279,7 +279,7 @@ public class ForexApiServiceUnitTest {
         when(mapper.toDto(EXCHANGE_RATES_ENTITY))
                 .thenReturn(ALL_RATES_RESPONSE_DTO);
 
-        when(localDateTimeProvider.getTime())
+        when(localDateTimeProvider.getTimeEpoch())
                 .thenReturn(Long.valueOf(CURR_EPOCH_TIME));
 
         // Act

@@ -1,6 +1,7 @@
 package com.zetta.forex.model.validation;
 
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
@@ -14,6 +15,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Constraint(validatedBy = CurrencyCodeValidator.class)
+@Schema(description = "ISO 4217 currency code", example = "USD", pattern = "^[A-Z]{3}$")
 public @interface ValidCurrencyCode {
 
     String message() default "Invalid currency code";

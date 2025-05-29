@@ -1,19 +1,18 @@
 package com.zetta.forex.config;
 
-
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class RestConsumerConfig {
 
-    @Value("${api_layer.url}")
-    private String apiUrl;
-
     @Bean
-    public WebClient webClient() {
-        return WebClient.builder().baseUrl(apiUrl).build();
+    public RestTemplate restTemplate() {
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+        factory.setConnectTimeout(3000); // 3 seconds connection timeout
+        factory.setReadTimeout(3000);    // 3 seconds read timeout
+        return new RestTemplate(factory);
     }
 }

@@ -1,11 +1,17 @@
 package com.zetta.forex.rest;
 
-import com.zetta.forex.config.GlobalExceptionHandler;
 import com.zetta.forex.model.criteria.ConversionHistoryCriteria;
 import com.zetta.forex.model.dto.ConversionHistoryResponse;
-import com.zetta.forex.model.dto.ErrorResponse;
+import com.zetta.forex.model.dto.ErrorResponseDto;
 import com.zetta.forex.model.entity.ConversionHistoryEntity;
 import com.zetta.forex.service.ConversionHistoryService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,14 +36,92 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
+@Tag(name = "Conversion History", description = "Logs every currency conversion")
 public class ConversionHistoryController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ConversionHistoryController.class);
 
-
     private final ConversionHistoryService service;
 
     @GetMapping("/history")
+    @Operation(
+            summary = "Get currency conversion history",
+            description = "Retrieves a paginated list of currency conversion records with optional filtering parameters",
+            parameters = {
+                    @Parameter(
+                            name = "fromDate",
+                            description = "Start date/time filter (inclusive) in ISO format (yyyy-MM-dd'T'HH:mm:ss)",
+                            in = ParameterIn.QUERY,
+                            schema = @Schema(type = "string", format = "date-time", example = "2023-01-01T00:00:00")
+                    ),
+                    @Parameter(
+                            name = "toDate",
+                            description = "End date/time filter (inclusive) in ISO format (yyyy-MM-dd'T'HH:mm:ss)",
+                            in = ParameterIn.QUERY,
+                            schema = @Schema(type = "string", format = "date-time", example = "2023-12-31T23:59:59")
+                    ),
+                    @Parameter(
+                            name = "sourceCurrency",
+                            description = "Filter by source currency code (3-letter ISO code)",
+                            in = ParameterIn.QUERY,
+                            schema = @Schema(type = "string", example = "USD")
+                    ),
+                    @Parameter(
+                            name = "targetCurrency",
+                            description = "Filter by target currency code (3-letter ISO code)",
+                            in = ParameterIn.QUERY,
+                            schema = @Schema(type = "string", example = "EUR")
+                    ),
+                    @Parameter(
+                            name = "minAmount",
+                            description = "Filter by minimum converted amount",
+                            in = ParameterIn.QUERY,
+                            schema = @Schema(type = "number", format = "decimal", example = "100.00")
+                    ),
+                    @Parameter(
+                            name = "maxAmount",
+                            description = "Filter by maximum converted amount",
+                            in = ParameterIn.QUERY,
+                            schema = @Schema(type = "number", format = "decimal", example = "1000.00")
+                    ),
+                    @Parameter(
+                            name = "page",
+                            description = "Page number (zero-based)",
+                            in = ParameterIn.QUERY,
+                            schema = @Schema(type = "integer", defaultValue = "0")
+                    ),
+                    @Parameter(
+                            name = "size",
+                            description = "Number of items per page",
+                            in = ParameterIn.QUERY,
+                            schema = @Schema(type = "integer", defaultValue = "10")
+                    ),
+                    @Parameter(
+                            name = "sort",
+                            description = "Sorting criteria in the format: property(,asc|desc). Default sort is timestamp,desc",
+                            in = ParameterIn.QUERY,
+                            schema = @Schema(type = "string", defaultValue = "timestamp,desc")
+                    )
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Successfully retrieved conversion history",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = Page.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Invalid request parameters",
+                            content = @Content(mediaType = "application/json")
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "Internal server error",
+                            content = @Content(mediaType = "application/json")
+                    )
+            }
+    )
     public ResponseEntity<?> getConversionHistory(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fromDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime toDate,
@@ -82,7 +166,7 @@ public class ConversionHistoryController {
             Sort.Direction direction = Sort.Direction.fromString(directionStr);
             sortObj = Sort.by(direction, property);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
+            return ResponseEntity.badRequest().body(new ErrorResponseDto().setError(e.getMessage()));
         }
 
         // Build criteria and query

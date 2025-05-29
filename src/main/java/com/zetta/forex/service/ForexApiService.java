@@ -14,9 +14,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
-import java.time.Duration;
 import java.util.Map;
 import java.util.Optional;
 
@@ -39,9 +39,12 @@ public class ForexApiService {
     @Value("${api_layer.all_currency_codes}")
     private String allCurrencyCodes;
 
+    @Value("${api_layer.url}")
+    private String apiUrl;
+
     private final String BASE_CURRENCY = "EUR";
 
-    private final WebClient webClient;
+    private final RestTemplate restTemplate;
 
     private final MapStructMapper mapper;
 
@@ -56,16 +59,13 @@ public class ForexApiService {
 
         // Try to fetch from API first
         try {
-            AllRatesResponseDto allRatesResponseDto = webClient.get()
-                    .uri(uriBuilder -> uriBuilder
-                            .queryParam("access_key", apiKey)
-                            .queryParam("source", BASE_CURRENCY)
-                            .queryParam("currencies", allCurrencyCodes)
-                            .build())
-                    .retrieve()
-                    .bodyToMono(AllRatesResponseDto.class)
-                    .timeout(Duration.ofSeconds(3))
-                    .block();
+            String url = UriComponentsBuilder.fromUriString(apiUrl)
+                    .queryParam("access_key", apiKey)
+                    .queryParam("source", BASE_CURRENCY)
+                    .queryParam("currencies", allCurrencyCodes)
+                    .toUriString();
+
+            AllRatesResponseDto allRatesResponseDto = restTemplate.getForObject(url, AllRatesResponseDto.class);
 
             assert allRatesResponseDto != null;
             if (allRatesResponseDto.getSuccess()) {
@@ -108,7 +108,7 @@ public class ForexApiService {
         double currRate = 1.0;
 
         ExchangeRateResponseDto exchangeRateResponseDto = new ExchangeRateResponseDto().setSuccess(true)
-                .setTimestamp(localDateTimeProvider.getTime())
+                .setTimestamp(localDateTimeProvider.getTimeEpoch())
                 .setFrom(from)
                 .setTo(to)
                 .setRate(currRate);
@@ -146,7 +146,7 @@ public class ForexApiService {
         Map<String, Double> quotes = rates.getQuotes();
 
         ConversionResponseDto conversionResponseDto = new ConversionResponseDto().setSuccess(true)
-                .setTimestamp(localDateTimeProvider.getTime())
+                .setTimestamp(localDateTimeProvider.getTimeEpoch())
                 .setFrom(from)
                 .setTo(to)
                 .setResult(amount);
